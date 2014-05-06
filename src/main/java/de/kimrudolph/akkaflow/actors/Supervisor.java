@@ -3,6 +3,8 @@ package de.kimrudolph.akkaflow.actors;
 import akka.actor.OneForOneStrategy;
 import akka.actor.SupervisorStrategy;
 import akka.actor.UntypedActor;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import akka.japi.Function;
 import de.kimrudolph.akkaflow.beans.Task;
 import de.kimrudolph.akkaflow.extension.SpringExtension;
@@ -18,13 +20,16 @@ import scala.concurrent.duration.Duration;
 @org.springframework.context.annotation.Scope("prototype")
 public class Supervisor extends UntypedActor {
 
+    private final LoggingAdapter log = Logging
+        .getLogger(getContext().system(), "Supervisor");
+
     @Autowired
     private SpringExtension extension;
 
     /**
      * Configure a no-retry-allowed policy
      */
-    private SupervisorStrategy strategy = new OneForOneStrategy(0,
+    private final SupervisorStrategy strategy = new OneForOneStrategy(0,
         Duration.Zero(),
         new Function<Throwable, SupervisorStrategy.Directive>() {
 
@@ -52,7 +57,13 @@ public class Supervisor extends UntypedActor {
             getContext().actorOf(extension.props("taskActor")).tell
                 (message, getSelf());
         } else if (message instanceof Long) {
-            System.out.println("Created task " + message);
+            // Process answer...
         }
+    }
+
+    @Override
+    public void postStop() throws Exception {
+        log.info("Shutting down");
+        super.postStop();
     }
 }

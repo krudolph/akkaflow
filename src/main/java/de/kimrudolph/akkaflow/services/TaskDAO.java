@@ -23,7 +23,7 @@ public class TaskDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public long createTask(final Task task) throws Exception {
+    public long createTask(final Task task) {
 
         KeyHolder holder = new GeneratedKeyHolder();
 
