@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.beans.PropertyVetoException;
+import java.util.Properties;
 
 @Configuration
 @Lazy
@@ -57,6 +58,14 @@ public class WorkflowConfiguration {
      */
     @Bean
     public JdbcTemplate jdbcTemplate() throws PropertyVetoException {
+
+        // Disable c3p0 logging
+        final Properties properties = new Properties(System.getProperties());
+        properties.put("com.mchange.v2.log.MLog",
+            "com.mchange.v2.log.FallbackMLog");
+        properties.put("com.mchange.v2.log.FallbackMLog.DEFAULT_CUTOFF_LEVEL",
+            "OFF");
+        System.setProperties(properties);
 
         final ComboPooledDataSource source = new ComboPooledDataSource();
         source.setMaxPoolSize(100);

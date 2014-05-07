@@ -7,6 +7,8 @@ public class Task {
 
     private String payload;
 
+    private Integer priority;
+
     public String getPayload() {
         return payload;
     }
@@ -15,4 +17,11 @@ public class Task {
         this.payload = payload;
     }
 
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
 }

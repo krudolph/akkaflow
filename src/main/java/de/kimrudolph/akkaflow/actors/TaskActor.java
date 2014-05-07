@@ -22,9 +22,7 @@ public class TaskActor extends UntypedActor {
     @Override
     public void onReceive(Object message) throws Exception {
 
-        // Create the task using the DAO and tell the supervisor the result
         Long result = taskDAO.createTask((Task) message);
         log.debug("Created task {}", result);
-        sender().tell(result, getSelf());
     }
 }
