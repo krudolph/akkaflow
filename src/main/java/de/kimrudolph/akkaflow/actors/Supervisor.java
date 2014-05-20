@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * A sample supervisor which should handle exceptions and general feedback
  * for the actual {@link de.kimrudolph.akkaflow.actors.TaskActor}
- *
+ * <p/>
  * A router is configured at startup time, managing a pool of task actors.
  */
 @Component
@@ -42,8 +42,8 @@ public class Supervisor extends UntypedActor {
 
         List<Routee> routees = new ArrayList<Routee>();
         for (int i = 0; i < 100; i++) {
-            ActorRef actor = getContext().actorOf(springExtension.props
-                ("taskActor"));
+            ActorRef actor = getContext().actorOf(springExtension.props(
+                "taskActor"));
             getContext().watch(actor);
             routees.add(new ActorRefRoutee(actor));
         }

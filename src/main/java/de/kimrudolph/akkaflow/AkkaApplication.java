@@ -8,24 +8,28 @@ import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import de.kimrudolph.akkaflow.beans.Task;
 import de.kimrudolph.akkaflow.extension.SpringExtension;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Random;
 
 /**
- * Tool to trigger messages passed to actors..
+ * Tool to trigger messages passed to actors.
  */
-public class Main {
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan("de.kimrudolph.akkaflow.configuration")
+public class AkkaApplication {
 
 
     public static void main(String[] args) throws Exception {
 
-        // create a producer context and scan the base configuration class
-        AnnotationConfigApplicationContext context =
-            new AnnotationConfigApplicationContext();
-        context.scan("de.kimrudolph.akkaflow.configuration");
-        context.refresh();
+        ApplicationContext context =
+            SpringApplication.run(AkkaApplication.class, args);
 
         ActorSystem system = context.getBean(ActorSystem.class);
 
@@ -36,10 +40,10 @@ public class Main {
         SpringExtension ext = context.getBean(SpringExtension.class);
 
         // Use the Spring Extension to create props for a named actor bean
-        ActorRef supervisor = system.actorOf(ext.props("supervisor")
-            .withMailbox("akka.priority-mailbox"));
+        ActorRef supervisor = system.actorOf(
+            ext.props("supervisor").withMailbox("akka.priority-mailbox"));
 
-        for (int i = 1; i < 100000; i++) {
+        for (int i = 1; i < 1000; i++) {
             Task task = new Task();
             task.setPayload("payload " + i);
             task.setPriority(new Random().nextInt(99));
@@ -50,18 +54,16 @@ public class Main {
         // message
         supervisor.tell(PoisonPill.getInstance(), null);
 
-        while(!supervisor.isTerminated()) {
+        while (!supervisor.isTerminated()) {
             Thread.sleep(100);
         }
 
         log.info("Created {} tasks", context.getBean(JdbcTemplate.class)
-            .queryForObject
-                ("SELECT COUNT(*) FROM tasks", Integer.class));
+            .queryForObject("SELECT COUNT(*) FROM tasks", Integer.class));
 
         log.info("Shutting down");
 
         system.shutdown();
         system.awaitTermination();
-        context.close();
     }
 }

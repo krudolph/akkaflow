@@ -20,7 +20,7 @@ import java.util.Properties;
 @Lazy
 @ComponentScan(basePackages = { "de.kimrudolph.akkaflow.services",
     "de.kimrudolph.akkaflow.actors", "de.kimrudolph.akkaflow.extension" })
-public class WorkflowConfiguration {
+public class ApplicationConfiguration {
 
     // The application context is needed to initialize the Akka Spring
     // Extension
