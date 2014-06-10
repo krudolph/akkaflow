@@ -11,7 +11,6 @@ import de.kimrudolph.akkaflow.beans.Task;
  */
 public class PriorityMailbox extends UnboundedPriorityMailbox {
 
-
     public PriorityMailbox(ActorSystem.Settings settings, Config config) {
 
         // Create a new PriorityGenerator, lower priority means more important

@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
- * Extension to tell Akka how create beans via Spring.
+ * Extension to tell Akka how to create beans via Spring.
  */
 @Component
 public class SpringExtension implements Extension {
