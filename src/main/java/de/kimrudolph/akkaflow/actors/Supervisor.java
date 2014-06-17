@@ -1,9 +1,10 @@
 package de.kimrudolph.akkaflow.actors;
 
-import akka.actor.*;
+import akka.actor.ActorRef;
+import akka.actor.Terminated;
+import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import akka.japi.Function;
 import akka.routing.ActorRefRoutee;
 import akka.routing.Routee;
 import akka.routing.Router;
@@ -11,8 +12,8 @@ import akka.routing.SmallestMailboxRoutingLogic;
 import de.kimrudolph.akkaflow.beans.Task;
 import de.kimrudolph.akkaflow.extension.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import scala.concurrent.duration.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
  * A router is configured at startup time, managing a pool of task actors.
  */
 @Component
-@org.springframework.context.annotation.Scope("prototype")
+@Scope("prototype")
 public class Supervisor extends UntypedActor {
 
     private final LoggingAdapter log = Logging
@@ -51,30 +52,6 @@ public class Supervisor extends UntypedActor {
         super.preStart();
     }
 
-    /**
-     * Configure a no-retry-allowed policy
-     */
-    private final SupervisorStrategy strategy = new OneForOneStrategy(0,
-        Duration.Zero(),
-        new Function<Throwable, SupervisorStrategy.Directive>() {
-
-            @Override
-            public SupervisorStrategy.Directive apply(
-                Throwable type) throws Exception {
-
-                if (type instanceof Exception) {
-                    return SupervisorStrategy.stop();
-                }
-
-                return SupervisorStrategy.escalate();
-            }
-        });
-
-    @Override
-    public SupervisorStrategy supervisorStrategy() {
-        return strategy;
-    }
-
     @Override
     public void onReceive(Object message) throws Exception {
 
@@ -88,7 +65,7 @@ public class Supervisor extends UntypedActor {
             getContext().watch(actor);
             router = router.addRoutee(new ActorRefRoutee(actor));
         } else {
-            log.error("Unable to interpret message {}", message);
+            log.error("Unable to handle message {}", message);
         }
     }
 

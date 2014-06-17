@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.beans.PropertyVetoException;
 import java.util.Properties;
 
 @Configuration
@@ -57,7 +56,7 @@ public class ApplicationConfiguration {
      * Creates th only table needed.
      */
     @Bean
-    public JdbcTemplate jdbcTemplate() throws PropertyVetoException {
+    public JdbcTemplate jdbcTemplate() throws Exception {
 
         // Disable c3p0 logging
         final Properties properties = new Properties(System.getProperties());

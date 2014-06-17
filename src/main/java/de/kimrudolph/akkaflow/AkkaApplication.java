@@ -25,7 +25,6 @@ import java.util.Random;
 @ComponentScan("de.kimrudolph.akkaflow.configuration")
 public class AkkaApplication {
 
-
     public static void main(String[] args) throws Exception {
 
         ApplicationContext context =
