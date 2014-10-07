@@ -43,9 +43,7 @@ public class AkkaApplication {
             ext.props("supervisor").withMailbox("akka.priority-mailbox"));
 
         for (int i = 1; i < 1000; i++) {
-            Task task = new Task();
-            task.setPayload("payload " + i);
-            task.setPriority(new Random().nextInt(99));
+            Task task = new Task("payload " + i, new Random().nextInt(99));
             supervisor.tell(task, null);
         }
 
