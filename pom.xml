@@ -9,9 +9,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring-boot-version>1.1.7.RELEASE</spring-boot-version>
-		<spring-framework-version>4.1.0.RELEASE</spring-framework-version>
-		<akka-version>2.3.3</akka-version>
+		<spring-boot-version>1.2.1.RELEASE</spring-boot-version>
+		<spring-framework-version>4.1.4.RELEASE</spring-framework-version>
+		<akka-version>2.3.9</akka-version>
 	</properties>
 
 	<dependencies>
